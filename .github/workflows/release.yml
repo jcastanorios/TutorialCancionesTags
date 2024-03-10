@@ -20,7 +20,7 @@ jobs:
         with:
             python-version: '3.7'
 
-
+      #Instalar librerias python
       - name: Instalación de librerías y dependencias
         run: |
           python -m pip install --upgrade pip
@@ -28,25 +28,46 @@ jobs:
 
       # Ejecutar pruebas
       - name: Ejecutar pruebas
+        id: ejecutar-pruebas-unitarias
         run: |
           python -m unittest tests/test_album.py
-        continue-on-error: true
-        id: test_result
 
+      #Validar resultado de las unitarias
       - name: Verificar resultado de las pruebas
         if: ${{ failure() }}
         run: |
           echo "Las pruebas unitarias fallaron, no se crea la rama release"
+          
+      - name: Validar resultado con errores
+        if: ${{ failure() }}
+        env:
+        msg_error_unitarias: Una o varias pruebas fallaron
+        run: echo "::set-output name=respuesta::${msg_error_unitarias}"
+
+      - name: Validar resultado sin errores
+        if: ${{ success() }}
+        env:
+          msg_success_unitarias: Todas las pruebas fueron exitosas
+        run: echo "::set-output name=respuesta::${msg_success_unitarias}"    
+
       - name: Generar nombre tag
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      #Cobertura de código  
+      - name: Cobertura de código
+        id: cobertura
+        run: |
+          coverage run -m unittest tests/test_persona.py
+          coverage report -m  
+
     
       #Crear un release
       - name: Crear Release
         if: steps.test_result.outcome == 'success'
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.date.outputs.date }}
           release_name: Release ${{ steps.date.outputs.date }}
