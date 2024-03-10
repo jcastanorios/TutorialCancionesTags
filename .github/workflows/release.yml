@@ -32,6 +32,7 @@ jobs:
         run: |
           python -m unittest tests/test_album.py
         if: ${{ failure() }}
+      - name: Validar resultado pruebas unitarias  
         env:
           msg_error_unitarias: Una o varias pruebas fallaron
         run: echo "::set-output name=respuesta::${msg_error_unitarias}"
