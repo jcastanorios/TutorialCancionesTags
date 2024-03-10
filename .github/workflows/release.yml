@@ -62,18 +62,19 @@ jobs:
           release_name: Release ${{ steps.date.outputs.date }}
           draft: false
           prerelease: false
- fusionar-cambios-master:
-      name: Fusionar release a master
-      needs: generar-release
-      runs-on: ubuntu-latest
-      steps:
-        - name: merge master
-          if: steps.test_result.outcome == 'success'
-          uses: tukasz/direct-merge-action@master
-          with:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            source-branch: develop
-            target-branch: master
-            commit-message: "Merge to release into master"    
+
+  fusionar-cambios-master:
+        name: Fusionar release a master
+        needs: generar-release
+        runs-on: ubuntu-latest
+        steps:
+          - name: merge master
+            if: steps.test_result.outcome == 'success'
+            uses: tukasz/direct-merge-action@master
+            with:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              source-branch: develop
+              target-branch: master
+              commit-message: "Merge to release into master"    
 
   
