@@ -26,7 +26,7 @@ jobs:
           pip install -r requirements.txt
   # Ejecutar pruebas
   unitarias:  
-    name: Ejecutar pruebas
+    name: Ejecutar pruebas unitarias
     needs: generate-release
     runs-on: ubuntu-latest
     
@@ -47,21 +47,26 @@ jobs:
         env:
           msg_success_unitarias: Todas las pruebas fueron exitosas
         run: echo "::set-output name=respuesta::${msg_success_unitarias}"    
-
-      #Generar nombre tags
-      - name: Generar nombre tag
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-
-      #Cobertura de código  
+  cobertura:  
+    name: Ejecutar pruebas unitarias
+    needs: unitarias
+    runs-on: ubuntu-latest
+    
+    steps:
       - name: Cobertura de código
         id: cobertura
         run: |
           coverage run -m unittest tests/test_persona.py
-          coverage report -m  
+          coverage report -m
 
-      
-      #Crear un release
+  generar-release:
+    name: Ejecutar pruebas unitarias
+    needs: cobertura
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generar nombre tag
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       - name: Crear Release
         if: steps.test_result.outcome == 'success'
         uses: actions/create-release@v1
