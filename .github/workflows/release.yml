@@ -63,7 +63,7 @@ jobs:
 
   generar-release:
     name: Ejecutar pruebas unitarias
-    needs: cobertura
+    needs: unitarias
     runs-on: ubuntu-latest
     steps:
       - name: Generar nombre tag
