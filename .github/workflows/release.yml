@@ -62,7 +62,7 @@ jobs:
         run: echo "::set-output name=respuesta::${msg_success_unitarias}"    
 
   generar-release:
-    name: Ejecutar pruebas unitarias
+    name: Generar release
     needs: unitarias
     runs-on: ubuntu-latest
     steps:
