@@ -42,13 +42,16 @@ jobs:
         run: echo "::set-output name=respuesta::${msg_success_unitarias}"    
 
   generar-release:
+    
     name: Generar release
     needs: unitarias
     runs-on: ubuntu-latest
     steps:
+
       - name: Generar nombre tag
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')" #hora
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M-%S')"
+
       - name: Crear Release
         if: steps.test_result.outcome == 'success'
         uses: actions/create-release@v1
@@ -59,4 +62,23 @@ jobs:
           release_name: Release ${{ steps.date.outputs.date }}
           draft: false
           prerelease: false
+  merge-to-main:
+    name: Fusionar rama release into master 
+    needs: generar-release 
+    runs-on: ubuntu-latest 
+    steps: 
+      - name: Checkout del repositorio
+        uses: actions/checkout@v2
+      with: 
+        ref: master 
+
+      - name: Merge release branch 
+      run: | 
+        git merge --no-ff origin/Release ${{ steps.date.outputs.date }}
+      
+      - name: Push changes 
+        uses: ad-m/github-push-action@master 
+        with: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          branch: master         
   
