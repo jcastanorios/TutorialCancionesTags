@@ -33,6 +33,11 @@ jobs:
     steps:
       - name: Checkout del repositorio
         uses: actions/checkout@v2
+
+      - name: Configuración de entorno de python
+        uses: actions/setup-python@v2
+        with:
+            python-version: '3.7'  
       
       - name: Ejecutar pruebas unitarias
         id: test_result
