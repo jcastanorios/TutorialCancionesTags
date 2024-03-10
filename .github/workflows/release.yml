@@ -50,7 +50,7 @@ jobs:
 
       - name: Generar nombre tag
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M-%S')"
+        run: echo "::set-output name=date::$(date +'v1.1')"
 
       - name: Crear Release
         if: steps.test_result.outcome == 'success'
