@@ -31,20 +31,16 @@ jobs:
         id: test_result
         run: |
           python -m unittest tests/test_album.py
-
-      #Validar resultado de las unitarias
-      - name: Validar resultado con errores
         if: ${{ failure() }}
         env:
           msg_error_unitarias: Una o varias pruebas fallaron
         run: echo "::set-output name=respuesta::${msg_error_unitarias}"
-
-      - name: Validar resultado sin errores
         if: ${{ success() }}
         env:
           msg_success_unitarias: Todas las pruebas fueron exitosas
         run: echo "::set-output name=respuesta::${msg_success_unitarias}"    
 
+      #Generar nombre tags
       - name: Generar nombre tag
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
