@@ -74,7 +74,7 @@ jobs:
 
       - name: Merge release branch 
         run: | 
-          git merge --no-ff origin/Release ${{ steps.date.outputs.date }}
+          git merge --no-ff origin/release
       
       - name: Push changes 
         uses: ad-m/github-push-action@master 
