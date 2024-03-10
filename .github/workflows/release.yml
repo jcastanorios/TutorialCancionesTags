@@ -37,12 +37,17 @@ jobs:
       - name: Configuración de entorno de python
         uses: actions/setup-python@v2
         with:
-            python-version: '3.7'  
+            python-version: '3.7'
+      - name: Instalación de librerías y dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt        
       
       - name: Ejecutar pruebas unitarias
         id: test_result
         run: |
           python -m unittest tests/test_album.py
+
         
       - name: Validar resultado pruebas unitarias fallidas
         if: ${{ failure() }}
