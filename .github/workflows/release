@@ -29,7 +29,7 @@ jobs:
       # Ejecutar pruebas
       - name: Ejecutar pruebas
         run: |
-          python -m unittest tests/test_recetario.py
+          python -m unittest tests/test_album.py
         continue-on-error: true
         id: test_result
 
