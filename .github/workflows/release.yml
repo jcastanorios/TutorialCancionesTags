@@ -4,7 +4,6 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
      branches: [ develop ]
-
 jobs:
   generate-release:
     name: Generación del release
