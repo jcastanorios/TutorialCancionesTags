@@ -5,8 +5,8 @@ on:
     # Sequence of patterns matched against refs/tags
      branches: [ develop ]
 jobs:
-  generate-release:
-    name: Generación del release
+  install-dependency:
+    name: Instalar dependencias
     #if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
@@ -27,7 +27,7 @@ jobs:
   # Ejecutar pruebas
   unitarias:  
     name: Ejecutar pruebas unitarias
-    needs: generate-release
+    needs: install-dependency
     runs-on: ubuntu-latest
     
     steps:
@@ -60,17 +60,6 @@ jobs:
         env:
           msg_success_unitarias: Todas las pruebas fueron exitosas
         run: echo "::set-output name=respuesta::${msg_success_unitarias}"    
-  cobertura:  
-    name: Ejecutar pruebas unitarias
-    needs: unitarias
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Cobertura de código
-        id: cobertura
-        run: |
-          coverage run -m unittest tests/test_persona.py
-          coverage report -m
 
   generar-release:
     name: Ejecutar pruebas unitarias
