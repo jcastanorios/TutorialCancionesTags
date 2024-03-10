@@ -28,7 +28,7 @@ jobs:
 
       # Ejecutar pruebas
       - name: Ejecutar pruebas
-        id: ejecutar-pruebas-unitarias
+        id: test_result
         run: |
           python -m unittest tests/test_album.py
 
@@ -37,11 +37,11 @@ jobs:
         if: ${{ failure() }}
         run: |
           echo "Las pruebas unitarias fallaron, no se crea la rama release"
-          
+
       - name: Validar resultado con errores
         if: ${{ failure() }}
         env:
-        msg_error_unitarias: Una o varias pruebas fallaron
+          msg_error_unitarias: Una o varias pruebas fallaron
         run: echo "::set-output name=respuesta::${msg_error_unitarias}"
 
       - name: Validar resultado sin errores
