@@ -69,12 +69,12 @@ jobs:
     steps: 
       - name: Checkout del repositorio
         uses: actions/checkout@v2
-      with: 
-        ref: master 
+        with: 
+          ref: master 
 
       - name: Merge release branch 
-      run: | 
-        git merge --no-ff origin/Release ${{ steps.date.outputs.date }}
+        run: | 
+          git merge --no-ff origin/Release ${{ steps.date.outputs.date }}
       
       - name: Push changes 
         uses: ad-m/github-push-action@master 
