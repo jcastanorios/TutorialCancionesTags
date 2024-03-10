@@ -26,48 +26,49 @@ jobs:
           pip install -r requirements.txt
   # Ejecutar pruebas
   unitarias:  
-        name: Ejecutar pruebas
-        needs: generate-release
-        runs-on: ubuntu-latest
-      steps:
-        - name: Ejecutar pruebas unitarias
-          id: test_result
-          run: |
-            python -m unittest tests/test_album.py
+    name: Ejecutar pruebas
+    needs: generate-release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Ejecutar pruebas unitarias
+        id: test_result
+        run: |
+          python -m unittest tests/test_album.py
         
-        - name: Validar resultado pruebas unitarias fallidas
-          if: ${{ failure() }}
-          env:
-            msg_error_unitarias: Una o varias pruebas fallaron
-          run: echo "::set-output name=respuesta::${msg_error_unitarias}"
+      - name: Validar resultado pruebas unitarias fallidas
+        if: ${{ failure() }}
+        env:
+          msg_error_unitarias: Una o varias pruebas fallaron
+        run: echo "::set-output name=respuesta::${msg_error_unitarias}"
 
-        - name: Validar resultado pruebas unitarias satisfactorias
-          if: ${{ success() }}
-          env:
-            msg_success_unitarias: Todas las pruebas fueron exitosas
-          run: echo "::set-output name=respuesta::${msg_success_unitarias}"    
+      - name: Validar resultado pruebas unitarias satisfactorias
+        if: ${{ success() }}
+        env:
+          msg_success_unitarias: Todas las pruebas fueron exitosas
+        run: echo "::set-output name=respuesta::${msg_success_unitarias}"    
 
-        #Generar nombre tags
-        - name: Generar nombre tag
-          id: date
-          run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      #Generar nombre tags
+      - name: Generar nombre tag
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-        #Cobertura de código  
-        - name: Cobertura de código
-          id: cobertura
-          run: |
-            coverage run -m unittest tests/test_persona.py
-            coverage report -m  
+      #Cobertura de código  
+      - name: Cobertura de código
+        id: cobertura
+        run: |
+          coverage run -m unittest tests/test_persona.py
+          coverage report -m  
 
       
-        #Crear un release
-        - name: Crear Release
-          if: steps.test_result.outcome == 'success'
-          uses: actions/create-release@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: ${{ steps.date.outputs.date }}
-            release_name: Release ${{ steps.date.outputs.date }}
-            draft: false
-            prerelease: false
+      #Crear un release
+      - name: Crear Release
+        if: steps.test_result.outcome == 'success'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.date.outputs.date }}
+          release_name: Release ${{ steps.date.outputs.date }}
+          draft: false
+          prerelease: false
